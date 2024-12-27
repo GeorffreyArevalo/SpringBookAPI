@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -50,6 +51,11 @@ public class BookEntity {
         this.image = image;
         this.state = state;
         this.inStock = inStock;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if( inStock == null ) inStock = 0;
     }
 
     public Long getId() {

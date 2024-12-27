@@ -9,6 +9,8 @@ import com.library.api_library.entities.BookEntity;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
 
+import jakarta.validation.ValidationException;
+
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -28,8 +30,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity save(BookEntity book) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+
+        bookRepository.findByTitle(book.getTitle())
+            .ifPresent( bookDB -> {
+                throw new ValidationException(String.format("Book with title %s already exists", bookDB.getTitle()));
+            });
+
+        return bookRepository.save(book);
     }
 
     @Override
