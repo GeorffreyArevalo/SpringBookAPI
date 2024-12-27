@@ -1,5 +1,6 @@
 package com.library.api_library.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,13 +9,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.library.api_library.services.interfaces.BookService;
+
 @RestController
 @RequestMapping("/books")
 public class BookController {
     
+    @Autowired
+    private BookService bookService;
+
     @GetMapping
     public ResponseEntity<?> getBooks() {
-        return ResponseEntity.ok("Get Books");
+        return ResponseEntity.ok(bookService.findAll());
     }
 
     @GetMapping("/id")
