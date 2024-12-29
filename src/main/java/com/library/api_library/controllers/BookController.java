@@ -36,14 +36,14 @@ public class BookController {
         return ResponseEntity.ok( bookService.save(book) );
     }
 
-    @PatchMapping("/id")
-    public ResponseEntity<?> updateBook() {
-        return ResponseEntity.ok("Update Book");
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody BookEntity book) {
+        return ResponseEntity.ok( bookService.update(id, book) );
     }
 
-    @DeleteMapping("/id")
-    public ResponseEntity<?> deleteBook() {
-        return ResponseEntity.ok("Delete Book");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.delete(id));
     }
 
 

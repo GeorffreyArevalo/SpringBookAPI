@@ -41,14 +41,24 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity update(Long id, BookEntity book) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        BookEntity bookFound = findById(id);
+
+        if( book.getTitle() != null ) bookFound.setTitle(book.getTitle());
+        if( book.getAuthor() != null ) bookFound.setAuthor(book.getAuthor());
+        if( book.getImage() != null ) bookFound.setImage(book.getImage());
+        if( book.getState() != null ) bookFound.setState(book.getState());
+        if( book.getInStock() != null ) bookFound.setInStock(book.getInStock());
+
+
+        return bookRepository.save(bookFound);
+
     }
 
     @Override
     public BookEntity delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        BookEntity bookFound = findById(id);
+        bookRepository.deleteById(id);
+        return bookFound;
     }
     
 
