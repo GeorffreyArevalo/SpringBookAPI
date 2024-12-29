@@ -9,6 +9,7 @@ import com.library.api_library.entities.BookEntity;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 
 @Service
@@ -24,8 +25,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return bookRepository.findById(id).orElseThrow( () -> new EntityNotFoundException(String.format("The book with id %s not found.", id)) );
     }
 
     @Override
