@@ -23,12 +23,12 @@ public class BookEntity {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
 
-    @NotEmpty
-    @Size( min = 3 )
+    @NotEmpty( message = "can't be empty." )
+    @Size( min = 3, message = "must be least 3 characters." )
     private String title;
 
-    @NotEmpty
-    @Size( min = 3 )
+    @NotEmpty( message = "can't be empty." )
+    @Size( min = 3, message = "must be least 3 characters." )
     private String author;
 
     private String image;

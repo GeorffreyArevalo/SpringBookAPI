@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.library.api_library.entities.BookEntity;
+import com.library.api_library.exceptions.BodyNotValidException;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ValidationException;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
 
         bookRepository.findByTitle(book.getTitle())
             .ifPresent( bookDB -> {
-                throw new ValidationException(String.format("Book with title %s already exists", bookDB.getTitle()));
+                throw new BodyNotValidException(String.format("Book with title %s already exists", bookDB.getTitle()));
             });
 
         return bookRepository.save(book);

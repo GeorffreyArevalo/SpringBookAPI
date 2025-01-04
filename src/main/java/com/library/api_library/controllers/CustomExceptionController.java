@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.library.api_library.exceptions.BodyNotValidException;
 import com.library.api_library.exceptions.models.ErrorModel;
 
 
@@ -27,6 +29,21 @@ public class CustomExceptionController {
         error.setStatusCode(HttpStatus.NOT_FOUND.value());
         error.setTimestamp(getTimestamp());
         
+        return error;
+
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, BodyNotValidException.class})
+    @ResponseStatus( HttpStatus.BAD_REQUEST )
+    public ErrorModel bodyNotValidException( Exception ex ) {
+
+        ErrorModel error = new ErrorModel();
+
+        error.setMessage("Body not Valid.");
+        error.setError(ex.getMessage());
+        error.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        error.setTimestamp(getTimestamp());
+
         return error;
 
     }
