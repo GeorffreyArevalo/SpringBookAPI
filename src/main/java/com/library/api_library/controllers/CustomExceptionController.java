@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.library.api_library.exceptions.BodyNotValidException;
+import com.library.api_library.exceptions.DataNotFoundException;
 import com.library.api_library.exceptions.models.ErrorModel;
 
 
@@ -18,13 +19,12 @@ import com.library.api_library.exceptions.models.ErrorModel;
 @RestControllerAdvice
 public class CustomExceptionController {
 
-    @ExceptionHandler(NoResourceFoundException.class)
+    @ExceptionHandler({NoResourceFoundException.class, DataNotFoundException.class})
     @ResponseStatus( HttpStatus.NOT_FOUND )
-    public ErrorModel resourceNotFoundException(NoResourceFoundException ex) {
+    public ErrorModel resourceNotFoundException(Exception ex) {
 
         ErrorModel error = new ErrorModel();
-
-        error.setMessage("Resource not found.");
+        error.setMessage("Resource or Data not found.");
         error.setError(ex.getMessage());
         error.setStatusCode(HttpStatus.NOT_FOUND.value());
         error.setTimestamp(getTimestamp());

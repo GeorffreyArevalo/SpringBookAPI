@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.library.api_library.entities.BookEntity;
 import com.library.api_library.exceptions.BodyNotValidException;
+import com.library.api_library.exceptions.DataNotFoundException;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -25,7 +24,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity findById(Long id) {
-        return bookRepository.findById(id).orElseThrow( () -> new EntityNotFoundException(String.format("The book with id %s not found.", id)) );
+        return bookRepository.findById(id).orElseThrow( () -> new DataNotFoundException(String.format("The book with id %s not found.", id)) );
     }
 
     @Override
