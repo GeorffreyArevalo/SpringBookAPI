@@ -12,6 +12,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.library.api_library.exceptions.BodyNotValidException;
 import com.library.api_library.exceptions.DataNotFoundException;
+import com.library.api_library.exceptions.InternalServerErrorException;
 import com.library.api_library.exceptions.models.ErrorModel;
 
 
@@ -46,6 +47,19 @@ public class CustomExceptionController {
 
         return error;
 
+    }
+
+    @ExceptionHandler( InternalServerErrorException.class )
+    @ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
+    public ErrorModel internalServerErrorException(Exception ex) {
+        ErrorModel error = new ErrorModel();
+
+        error.setMessage("Internal Server Error.");
+        error.setError(ex.getMessage());
+        error.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setTimestamp(getTimestamp());
+
+        return error;
     }
 
     private String getTimestamp() {

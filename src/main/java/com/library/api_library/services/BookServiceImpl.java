@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.library.api_library.entities.BookEntity;
 import com.library.api_library.exceptions.BodyNotValidException;
 import com.library.api_library.exceptions.DataNotFoundException;
+import com.library.api_library.exceptions.InternalServerErrorException;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
 
@@ -19,7 +20,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookEntity> findAll() {
-        return (List<BookEntity>) bookRepository.findAll();
+        try {
+
+            //* Force an exception */
+            // String title = null;
+            // int size = title.length();
+            return (List<BookEntity>) bookRepository.findAll();
+        } catch (Exception err) {
+          throw new InternalServerErrorException(err.getMessage());
+        }
+
     }
 
     @Override
