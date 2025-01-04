@@ -2,14 +2,14 @@ package com.library.api_library.controllers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import com.library.api_library.exceptions.models.ErrorModel;
 
 
 
@@ -18,14 +18,14 @@ public class CustomExceptionController {
 
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus( HttpStatus.NOT_FOUND )
-    public Map<String, Object> resourceNotFoundException(NoResourceFoundException ex) {
+    public ErrorModel resourceNotFoundException(NoResourceFoundException ex) {
 
-        Map<String, Object> error = new HashMap<>();
+        ErrorModel error = new ErrorModel();
 
-        error.put("message", "Resource not found.");
-        error.put("error", ex.getMessage());
-        error.put("statusCode", HttpStatus.NOT_FOUND.value());
-        error.put("timestamp", getTimestamp());
+        error.setMessage("Resource not found.");
+        error.setError(ex.getMessage());
+        error.setStatusCode(HttpStatus.NOT_FOUND.value());
+        error.setTimestamp(getTimestamp());
         
         return error;
 
