@@ -2,7 +2,7 @@
 # Book API REST - Spring Boot
 
 ## Descripción
-Creación de un API REST con Spring Boot y Java, en donde se realiza una conexión a una base de datos relacional de Postgresql y se utiliza JPA como ORM para la debida conexión e interacción con la base de datos.
+Creación de un API REST con Spring Boot y Java, en donde se realiza una conexión a una base de datos relacional de Postgresql y se utiliza JPA como ORM para la debida conexión e interacción con la base de datos, además de ello se raliza un manejo de excepciones para generar respuestas de error con mensajes más específicos.
 
 ## Pasos para le ejecución de la aplicación
 - Ejecutar el comando ```docker compose up -d``` para levantar la base de datos con Docker, si desea cambie la configuración en el archivo ```docker-compose.yml```.
