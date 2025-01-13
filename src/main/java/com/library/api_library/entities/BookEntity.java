@@ -1,19 +1,26 @@
 package com.library.api_library.entities;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.library.api_library.enums.StateBook;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -47,6 +54,14 @@ public class BookEntity {
     @JoinColumn( name = "id_category" )
     @JsonIgnoreProperties( value = "books" )
     private CategoryEntity category;
+
+    @ManyToMany( cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY )
+    @JoinTable( name = "books_genres", joinColumns = @JoinColumn( name = "id_book" ),
+        inverseJoinColumns = @JoinColumn( name = "id_genre" ),
+        uniqueConstraints = @UniqueConstraint( columnNames = {"id_book", "id_genre"} )
+    )
+    @JsonIgnoreProperties( value = "books" )
+    private Set<GenreEntity> genres;
 
     public BookEntity() {
     }
@@ -121,5 +136,14 @@ public class BookEntity {
     public void setCategory(CategoryEntity category) {
         this.category = category;
     }
+
+    public Set<GenreEntity> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<GenreEntity> genres) {
+        this.genres = genres;
+    }
+
 
 }

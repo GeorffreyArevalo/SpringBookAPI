@@ -1,18 +1,22 @@
 package com.library.api_library.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.library.api_library.entities.BookEntity;
 import com.library.api_library.entities.CategoryEntity;
+import com.library.api_library.entities.GenreEntity;
 import com.library.api_library.exceptions.BodyNotValidException;
 import com.library.api_library.exceptions.DataNotFoundException;
 import com.library.api_library.exceptions.InternalServerErrorException;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
 import com.library.api_library.services.interfaces.CategoryService;
+import com.library.api_library.services.interfaces.GenreService;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -22,6 +26,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private GenreService genreService;
 
     @Override
     public List<BookEntity> findAll() {
@@ -52,6 +59,26 @@ public class BookServiceImpl implements BookService {
 
             if( book.getCategory() != null ) book.setCategory(getCategory(book));
 
+
+            if( book.getGenres() != null && !book.getGenres().isEmpty() ) {
+
+                Set<GenreEntity> genresFound = new HashSet<>();
+
+                for (GenreEntity genre: book.getGenres()) {
+                    
+                    if( genre.getId() != null ) {
+                        GenreEntity genreFound = genreService.findById(genre.getId());
+                        genresFound.add(genreFound);
+                    } else {
+                        genresFound.add(genre);
+                    }
+
+                }
+
+                book.setGenres(genresFound);
+
+            }
+
         try {
             return bookRepository.save(book);
         } catch (Exception e) {
@@ -72,6 +99,7 @@ public class BookServiceImpl implements BookService {
 
         if( book.getCategory() != null ) bookFound.setCategory( getCategory(book) );
 
+        if( book.getGenres() != null && !book.getGenres().isEmpty() ) bookFound.setGenres(book.getGenres());
         
 
         try {
