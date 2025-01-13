@@ -27,6 +27,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryEntity> save( @RequestBody CategoryEntity category ) {
+        System.out.println(category.getBooks());
         return ResponseEntity.ok( categoryService.save(category) );
     }
 

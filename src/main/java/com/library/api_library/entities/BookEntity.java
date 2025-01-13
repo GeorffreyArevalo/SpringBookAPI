@@ -1,5 +1,6 @@
 package com.library.api_library.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.library.api_library.enums.StateBook;
 
 import jakarta.persistence.Column;
@@ -9,6 +10,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
@@ -39,6 +42,11 @@ public class BookEntity {
     @Min( value = 0 )
     @Column( nullable = false, columnDefinition = "integer default 0" )
     private Integer inStock;
+
+    @ManyToOne
+    @JoinColumn( name = "id_category" )
+    @JsonIgnoreProperties( value = "books" )
+    private CategoryEntity category;
 
     public BookEntity() {
     }
@@ -106,7 +114,12 @@ public class BookEntity {
         this.inStock = inStock;
     }
 
-    
+    public CategoryEntity getCategory() {
+        return category;
+    }
 
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
+    }
 
 }

@@ -6,17 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.library.api_library.entities.BookEntity;
+import com.library.api_library.entities.CategoryEntity;
 import com.library.api_library.exceptions.BodyNotValidException;
 import com.library.api_library.exceptions.DataNotFoundException;
 import com.library.api_library.exceptions.InternalServerErrorException;
 import com.library.api_library.repositories.BookRepository;
 import com.library.api_library.services.interfaces.BookService;
+import com.library.api_library.services.interfaces.CategoryService;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public List<BookEntity> findAll() {
@@ -45,7 +50,14 @@ public class BookServiceImpl implements BookService {
                 throw new BodyNotValidException(String.format("Book with title %s already exists", bookDB.getTitle()));
             });
 
-        return bookRepository.save(book);
+            if( book.getCategory() != null ) book.setCategory(getCategory(book));
+
+        try {
+            return bookRepository.save(book);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+
     }
 
     @Override
@@ -58,8 +70,16 @@ public class BookServiceImpl implements BookService {
         if( book.getState() != null ) bookFound.setState(book.getState());
         if( book.getInStock() != null ) bookFound.setInStock(book.getInStock());
 
+        if( book.getCategory() != null ) bookFound.setCategory( getCategory(book) );
 
-        return bookRepository.save(bookFound);
+        
+
+        try {
+            return bookRepository.save(bookFound);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+
 
     }
 
@@ -70,6 +90,16 @@ public class BookServiceImpl implements BookService {
         return bookFound;
     }
     
+
+    private CategoryEntity getCategory( BookEntity book ) {
+        CategoryEntity category;
+        if( book.getCategory().getId() == null ) {
+            category = categoryService.save(book.getCategory());
+        }else {
+            category = categoryService.findById( book.getCategory().getId() );
+        }
+        return category;
+    }
 
 
 }

@@ -32,6 +32,11 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public CategoryEntity save(CategoryEntity category) {
+
+        if( category.getBooks() != null && !category.getBooks().isEmpty() ) {
+            category.getBooks().forEach(category::addBook);
+        }
+
         return categoryRepository.save(category);
     }
 
