@@ -1,11 +1,14 @@
 package com.library.api_library.services;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.library.api_library.entities.BookEntity;
 import com.library.api_library.entities.CategoryEntity;
@@ -50,6 +53,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookEntity save(BookEntity book) {
 
         bookRepository.findByTitle(book.getTitle())
@@ -79,6 +83,11 @@ public class BookServiceImpl implements BookService {
 
             }
 
+            if( book.getBookDetails() != null ) {
+                book.getBookDetails().setId(null);
+                book.getBookDetails().setBook(book);
+            }
+
         try {
             return bookRepository.save(book);
         } catch (Exception e) {
@@ -88,6 +97,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookEntity update(Long id, BookEntity book) {
         BookEntity bookFound = findById(id);
 
@@ -100,6 +110,11 @@ public class BookServiceImpl implements BookService {
         if( book.getCategory() != null ) bookFound.setCategory( getCategory(book) );
 
         if( book.getGenres() != null && !book.getGenres().isEmpty() ) bookFound.setGenres(book.getGenres());
+
+        if( book.getBookDetails() != null ) {
+            book.getBookDetails().setBook(bookFound);
+            bookFound.setBookDetails(book.getBookDetails());
+        }
         
 
         try {
@@ -112,10 +127,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookEntity delete(Long id) {
+    @Transactional
+    public Map<String, Object> delete(Long id) {
+        Map<String, Object> response = new HashMap<>();
+        
         BookEntity bookFound = findById(id);
         bookRepository.deleteById(id);
-        return bookFound;
+
+        response.put("id", bookFound.getId());
+        response.put("title", bookFound.getTitle());
+        
+        return response;
     }
     
 

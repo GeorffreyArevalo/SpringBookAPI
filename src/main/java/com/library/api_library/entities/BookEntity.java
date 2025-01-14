@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -62,6 +63,10 @@ public class BookEntity {
     )
     @JsonIgnoreProperties( value = "books" )
     private Set<GenreEntity> genres;
+
+    @OneToOne( cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "book", fetch = FetchType.LAZY )
+    @JsonIgnoreProperties( value = "book" )
+    private BookDetailsEntity bookDetails;
 
     public BookEntity() {
     }
@@ -145,5 +150,12 @@ public class BookEntity {
         this.genres = genres;
     }
 
+    public BookDetailsEntity getBookDetails() {
+        return bookDetails;
+    }
+
+    public void setBookDetails(BookDetailsEntity bookDetail) {
+        this.bookDetails = bookDetail;
+    }
 
 }
